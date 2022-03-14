@@ -396,9 +396,9 @@ void PublishOdometry()
     double theta = robot_pose_pa_;
     geometry_msgs::Quaternion quat = tf::createQuaternionMsgFromYaw( theta );
     odom_trans.transform.rotation.x = quat.x;
-	odom_trans.transform.rotation.y = quat.y;
-	odom_trans.transform.rotation.z = quat.z;
-	odom_trans.transform.rotation.w = quat.w;
+    odom_trans.transform.rotation.y = quat.y;
+    odom_trans.transform.rotation.z = quat.z;
+    odom_trans.transform.rotation.w = quat.w;
 
 	
     // send the transform over /tf
@@ -418,9 +418,9 @@ void PublishOdometry()
     odom.pose.pose.position.z = 0.0;
 	// Orientation
     odom.pose.pose.orientation.x = orientation_diff_x_;
-	odom.pose.pose.orientation.y = orientation_diff_y_;
-	odom.pose.pose.orientation.z = orientation_diff_z_;
-	odom.pose.pose.orientation.w = orientation_diff_w_;
+    odom.pose.pose.orientation.y = orientation_diff_y_;
+    odom.pose.pose.orientation.z = orientation_diff_z_;
+    odom.pose.pose.orientation.w = orientation_diff_w_;
 	
     // Pose covariance
     for(int i = 0; i < 6; i++)
@@ -431,10 +431,10 @@ void PublishOdometry()
 	// Linear velocities
     odom.twist.twist.linear.x = robot_pose_vx_;
     odom.twist.twist.linear.y = robot_pose_vy_;
-	odom.twist.twist.linear.z = 0.0;
+	  odom.twist.twist.linear.z = 0.0;
 	// Angular velocities
-	odom.twist.twist.angular.x = ang_vel_x_;
-	odom.twist.twist.angular.y = ang_vel_y_;
+	  odom.twist.twist.angular.x = ang_vel_x_;
+	  odom.twist.twist.angular.y = ang_vel_y_;
     odom.twist.twist.angular.z = ang_vel_z_;
 	// Twist covariance
 	for(int i = 0; i < 6; i++)
@@ -577,7 +577,7 @@ void imuCallback( const sensor_msgs::Imu& imu_msg){
 
 	lin_acc_x_ = imu_msg.linear_acceleration.x;
 	lin_acc_y_ = imu_msg.linear_acceleration.y;
-    lin_acc_z_ = imu_msg.linear_acceleration.z;
+  lin_acc_z_ = imu_msg.linear_acceleration.z;
 }
 
 double saturation(double u, double min, double max)
