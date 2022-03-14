@@ -12,3 +12,12 @@ This package contains the simulated controlled that interfaces with Gazebo contr
 
 ## agvs_sim_bringup
 This package contains all the launch and config files to launch all the needed packages to load the simulated environment.
+
+
+## Guide
+
+- Spawn a gazebo robot: 
+    ```$ roslaunch agvs_gazebo agvs_sim_complete.launch```
+
+- Control robot without joystick: 
+    ```$ rosrun rqt_gui rqt_gui``` & add publisher (```agvs_robot_control/command```)
