@@ -116,7 +116,7 @@
   <gazebo reference="laser_back">
     <sensor type="ray" name="back_sick_sensor">
       <pose>0 0 0 0 0 0</pose>
-      <visualize>true</visualize>
+      <visualize>false</visualize>
       <update_rate>30</update_rate>
       <ray>
         <scan>
