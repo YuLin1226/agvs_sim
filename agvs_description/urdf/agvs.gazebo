@@ -105,7 +105,7 @@
       </ray>
       <!-- plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so" -->
       <plugin name="gazebo_ros_front_sick_controller" filename="libgazebo_ros_laser.so">
-        <topicName>/scan</topicName>
+        <topicName>/front/scan</topicName>
         <frameName>laser_front</frameName>
       </plugin>
     </sensor>
@@ -113,10 +113,10 @@
 
 
   <!-- sick laser -->
-  <!--gazebo reference="laser_back">
+  <gazebo reference="laser_back">
     <sensor type="ray" name="back_sick_sensor">
       <pose>0 0 0 0 0 0</pose>
-      <visualize>false</visualize>
+      <visualize>true</visualize>
       <update_rate>30</update_rate>
       <ray>
         <scan>
@@ -140,11 +140,11 @@
       </ray>
       
       <plugin name="gazebo_ros_front_sick_controller" filename="libgazebo_ros_laser.so">
-        <topicName>/scan</topicName>
+        <topicName>/rear/scan</topicName>
         <frameName>laser_back</frameName>
       </plugin>
     </sensor>
-  </gazebo-->
+  </gazebo>
 
 
 
