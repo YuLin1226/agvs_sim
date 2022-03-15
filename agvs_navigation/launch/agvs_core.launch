@@ -23,7 +23,7 @@
 		<!-- robot_localization(ekf) -->
 		<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
 			<rosparam command="load" file="$(find agvs_navigation)/params/ekf_params.yaml" />
-      <!-- <remap from="odometry/filtered" to="ekf_odom"/> -->
+      <remap from="odometry/filtered" to="ekf_odom"/>
 		</node>
 
 

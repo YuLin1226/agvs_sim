@@ -17,8 +17,8 @@ obstacle_layer:
  combination_method: 1
 
  observation_sources: front_laser rear_laser 
- front_laser: {data_type: LaserScan, topic: /front/scan, marking: true, clearing: true, inf_is_valid: true}
- rear_laser: {data_type: LaserScan, topic: /rear/scan, marking: true, clearing: true, inf_is_valid: true}
+ front_laser: {data_type: LaserScan, topic: /front/scan,  marking: true,  clearing: true,   inf_is_valid: true}
+ rear_laser:  {data_type: LaserScan, topic: /rear/scan,   marking: true,  clearing: true,   inf_is_valid: true}
 
 inflation_layer:
   enabled:              true

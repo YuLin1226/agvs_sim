@@ -5,7 +5,7 @@
     <arg name="init_x" default="0.0" />
     <arg name="init_y" default="0.0" />
     <arg name="init_a" default="0.0" />
-    <arg name="car_length" default="0.4" />
+    <arg name="car_length" default="1.0" />
 
     <!-- Agvs core -->
     <include file="$(find agvs_navigation)/launch/agvs_core.launch" />
@@ -14,11 +14,11 @@
     <node name="map_server" pkg="map_server" type="map_server" args="$(find agvs_sim_bringup)/maps/agvs_floor_1.yaml"/>
     
     <!-- AMCL -->
-    <include file="$(find agvs_navigation)/launch/includes/amcl.xml">
+    <!-- <include file="$(find agvs_navigation)/launch/includes/amcl.xml">
         <arg name="init_x" value="$(arg init_x)"/>
         <arg name="init_y" value="$(arg init_y)"/>
         <arg name="init_a" value="$(arg init_a)"/>
-    </include>
+    </include> -->
 
     <!-- move base navigation -->
     <include file="$(find agvs_navigation)/launch/includes/move_base_teb.xml">
