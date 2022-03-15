@@ -12,7 +12,7 @@
 
         <param name="angle_min" value="-3.141596"/>
         <param name="angle_max" value="3.141596"/>
-        <param name="angle_increment" value="0.006283"/>
+        <param name="angle_increment" value="0.00436"/>
         <param name="scan_time" value="0.1"/>
         <param name="range_min" value="0.2"/>
         <param name="range_max" value="30.0"/>
@@ -21,9 +21,10 @@
 		
  
 		<!-- robot_localization(ekf) -->
-		<!-- <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+		<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
 			<rosparam command="load" file="$(find agvs_navigation)/params/ekf_params.yaml" />
-		</node> -->
+      <!-- <remap from="odometry/filtered" to="ekf_odom"/> -->
+		</node>
 
 
 </launch>
