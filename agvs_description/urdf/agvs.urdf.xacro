@@ -306,7 +306,7 @@
     <joint_properties damping="${side_wheel_joint_damping}" friction="{side_wheel_joint_friction}"/>
   </joint>
 
-  <!-- <transmission name="joint_swl_trans">
+  <transmission name="joint_swl_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="joint_side_wheel_left">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
@@ -315,7 +315,7 @@
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>${wheel_mechanical_reduction}</mechanicalReduction>
     </actuator>
-  </transmission> -->
+  </transmission>
 
   
   <!-- SIDE WHEEL RIGHT (GREY) -->
@@ -351,7 +351,7 @@
     <joint_properties damping="${side_wheel_joint_damping}" friction="{side_wheel_joint_friction}"/>
   </joint>
   
-  <!-- <transmission name="joint_swr_trans">
+  <transmission name="joint_swr_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="joint_side_wheel_right">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
@@ -360,7 +360,7 @@
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>${wheel_mechanical_reduction}</mechanicalReduction>
     </actuator>
-  </transmission> -->
+  </transmission>
   
   
   <!-- ***************************** --> 
