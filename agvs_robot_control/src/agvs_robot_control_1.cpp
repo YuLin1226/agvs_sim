@@ -470,12 +470,12 @@ void UpdateControl_cmd_vel()
 
   theta1_msg.data = theta_1;
   theta2_msg.data = theta_2;
-	std::cout<< " =========== cmd_vel =========== " << std::endl;
-  std::cout<< "前輪速度：" << v1_msg.data << std::endl;
-  std::cout<< "前輪轉向：" << theta1_msg.data << std::endl;
-  std::cout<< "前輪速度：" << v2_msg.data << std::endl;
-  std::cout<< "後輪轉向：" << theta2_msg.data << std::endl;
-  std::cout<< " =========== cmd_vel =========== " << std::endl;
+	// std::cout<< " =========== cmd_vel =========== " << std::endl;
+  // std::cout<< "前輪速度：" << v1_msg.data << std::endl;
+  // std::cout<< "前輪轉向：" << theta1_msg.data << std::endl;
+  // std::cout<< "前輪速度：" << v2_msg.data << std::endl;
+  // std::cout<< "後輪轉向：" << theta2_msg.data << std::endl;
+  // std::cout<< " =========== cmd_vel =========== " << std::endl;
 
   // Publish references 
   ref_vel_fwd_.publish( v1_msg );
@@ -639,18 +639,17 @@ void cmd_vel_Callback(const geometry_msgs::Twist::ConstPtr& msg)
     theta_2 = PI/2 - std::atan( (R*std::sin(PI/2 - theta))/(D/2 + R*std::cos(PI/2 - theta)) );
     
     if (R == 0){  // v = 0, 感覺要改套差速輪的運動學模型，不然不會動。
-      v_1 = 0;
-      v_2 = 0;
+      v_1 = -w * D/2;
+      v_2 =  w * D/2;
     }
     else{
-      theta_1 = saturation(theta_1, -PI, PI);
-      theta_2 = saturation(theta_2, -PI, PI);
+      
       if(theta_1 > PI/2){
-        theta_1 -= PI/2;
+        theta_1 -= PI;
         v_1 =-v*(R_1/R);
       }
       else if(theta_1 < -PI/2){
-        theta_1 += PI/2;
+        theta_1 += PI;
         v_1 =-v*(R_1/R);
       }
       else{
@@ -658,11 +657,11 @@ void cmd_vel_Callback(const geometry_msgs::Twist::ConstPtr& msg)
       }
 
       if(theta_2 > PI/2){
-        theta_2 -= PI/2;
+        theta_2 -= PI;
         v_2 =-v*(R_2/R);
       }
       else if(theta_2 < -PI/2){
-        theta_2 += PI/2;
+        theta_2 += PI;
         v_2 =-v*(R_2/R);
       }
       else{
