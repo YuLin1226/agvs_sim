@@ -37,8 +37,13 @@ include_directories(
 
 add_executable(agvs_robot_control src/agvs_robot_control.cpp)
 add_dependencies(agvs_robot_control robotnik_msgs_generate_messages_cpp)
-
 target_link_libraries(agvs_robot_control
+${catkin_LIBRARIES}
+)
+
+add_executable(agvs_robot_control_1 src/agvs_robot_control_1.cpp)
+add_dependencies(agvs_robot_control_1 robotnik_msgs_generate_messages_cpp)
+target_link_libraries(agvs_robot_control_1
    ${catkin_LIBRARIES}
 )
 
