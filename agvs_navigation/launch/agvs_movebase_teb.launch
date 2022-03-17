@@ -2,8 +2,9 @@
 
 <launch>
     <arg name="use_rviz" default="true" />
-    <arg name="use_move_base" default="false"/>
-    <arg name="use_ekf" default="false"/>
+    <arg name="use_move_base" default="true"/>
+    <arg name="use_amcl" default="false"/>
+    <arg name="use_ekf" default="true"/>
     <arg name="init_x" default="-1.0" />
     <arg name="init_y" default="0.0" />
     <arg name="init_a" default="0.0" />
@@ -17,7 +18,7 @@
     <node name="map_server" pkg="map_server" type="map_server" args="$(find agvs_navigation)/maps/indoors12.yaml"/>
     
     <!-- AMCL -->
-    <include file="$(find agvs_navigation)/launch/includes/amcl.xml">
+    <include file="$(find agvs_navigation)/launch/includes/amcl.xml" if="$(arg use_amcl)">
         <arg name="init_x" value="$(arg init_x)"/>
         <arg name="init_y" value="$(arg init_y)"/>
         <arg name="init_a" value="$(arg init_a)"/>
@@ -49,8 +50,12 @@
         <remap from="odometry/filtered" to="ekf_odom"/>
     </node>
 
+    <!-- use teleop to control robot when not using move_base -->
+    <node pkg="agvs_robot_control" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard" unless="$(arg use_move_base)"/>
 
-
+    <!-- fake a map to odom tf when not using amcl -->
+    <include file="$(find agvs_navigation)/launch/includes/map_odom_tf.xml" unless="$(arg use_amcl)"/>
+    
 
     <!-- Rviz -->
     <node pkg="rviz" type="rviz" name="rviz" args="-d $(find agvs_navigation)/rviz/indoors12.rviz" if="$(arg use_rviz)" />
