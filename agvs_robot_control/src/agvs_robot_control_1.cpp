@@ -639,8 +639,8 @@ void cmd_vel_Callback(const geometry_msgs::Twist::ConstPtr& msg)
     theta_2 = PI/2 - std::atan( (R*std::sin(PI/2 - theta))/(D/2 + R*std::cos(PI/2 - theta)) );
     
     if (R == 0){  // v = 0, 感覺要改套差速輪的運動學模型，不然不會動。
-      v_1 = -w * D/2;
-      v_2 =  w * D/2;
+      v_1 =  w * D/2;
+      v_2 = -w * D/2;
     }
     else{
       
