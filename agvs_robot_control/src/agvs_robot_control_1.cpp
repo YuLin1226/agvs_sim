@@ -614,61 +614,34 @@ void cmd_vel_Callback(const geometry_msgs::Twist::ConstPtr& msg)
   double v_y = msg->linear.y;
   double w   = msg->angular.z;
 
-  theta = std::atan2(v_y, v_x);
-  v   = std::sqrt(v_x*v_x + v_y*v_y);
-  int dir = 1;
-  if(w == 0){
-    if(theta > PI/2){
-      theta -= PI;
-      dir = -1;
-    }
-    else if(theta < -PI/2){
-      theta += PI;
-      dir = -1;
-    }
-    theta_1 = theta;
-    theta_2 = theta;
-    v_1 = dir*v;
-    v_2 = dir*v;
-  }
-  else{
-    R   = v/w;
-    double R_1  = std::sqrt( (D/2 + R*std::cos(PI/2 - theta))*(D/2 + R*std::cos(PI/2 - theta)) + (R*std::sin(PI/2 - theta))*(R*std::sin(PI/2 - theta)) );
-    double R_2  = std::sqrt( (D/2 - R*std::cos(PI/2 - theta))*(D/2 - R*std::cos(PI/2 - theta)) + (R*std::sin(PI/2 - theta))*(R*std::sin(PI/2 - theta)) );
-    theta_1 = PI/2 - std::atan( (R*std::sin(PI/2 - theta))/(D/2 - R*std::cos(PI/2 - theta)) );
-    theta_2 = PI/2 - std::atan( (R*std::sin(PI/2 - theta))/(D/2 + R*std::cos(PI/2 - theta)) );
-    
-    if (R == 0){  // v = 0, 感覺要改套差速輪的運動學模型，不然不會動。
-      v_1 =  w * D/2;
-      v_2 = -w * D/2;
-    }
-    else{
-      
-      if(theta_1 > PI/2){
-        theta_1 -= PI;
-        v_1 =-v*(R_1/R);
-      }
-      else if(theta_1 < -PI/2){
-        theta_1 += PI;
-        v_1 =-v*(R_1/R);
-      }
-      else{
-        v_1 =v*(R_1/R);
-      }
+  double v1x = v_x;
+  double v1y = v_y + w*D/2;
+  double v2x = v_x;
+  double v2y = v_y - w*D/2;
 
-      if(theta_2 > PI/2){
-        theta_2 -= PI;
-        v_2 =-v*(R_2/R);
-      }
-      else if(theta_2 < -PI/2){
-        theta_2 += PI;
-        v_2 =-v*(R_2/R);
-      }
-      else{
-        v_2 =v*(R_2/R);
-      }
+  v_1 = std::sqrt(v1x*v1x+v1y*v1y);
+  v_2 = std::sqrt(v2x*v2x+v2y*v2y);
+  theta_1 = std::atan2(v1y, v1x);
+  theta_2 = std::atan2(v2y, v2x);
+
+  if(theta_1 > PI/2){
+      theta_1 -= PI;
+      v_1 *= -1;
     }
+  else if(theta_1 < -PI/2){
+    theta_1 += PI;
+    v_1 *= -1;
   }
+
+  if(theta_2 > PI/2){
+    theta_2 -= PI;
+    v_2 *= -1;
+  }
+  else if(theta_2 < -PI/2){
+    theta_2 += PI;
+    v_2 *= -1;
+  }
+  
 }
 
 // Imu callback
