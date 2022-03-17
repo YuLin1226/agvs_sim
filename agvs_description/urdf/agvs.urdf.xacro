@@ -164,7 +164,7 @@
   <joint name="joint_back_wheel" type="continuous">
     <parent link="back_motor_wheel"/>
     <child link="back_wheel"/>
-    <origin xyz="0 0 0" rpy="0 0 3.1416" /> 
+    <origin xyz="0 0 0" rpy="0 0 0" /> 
     <axis xyz="0 1 0" rpy="0 0 0" />
     <limit effort="${wheel_joint_effort_limit}" velocity="${wheel_joint_velocity_limit}"/>
     <joint_properties damping="${wheel_joint_damping}" friction="{wheel_joint_friction}"/>
@@ -253,7 +253,7 @@
   <joint name="joint_front_wheel" type="continuous">
     <parent link="front_motor_wheel"/>
     <child link="front_wheel"/>
-    <origin xyz="0 0 0" rpy="0 0 3.1416" /> 
+    <origin xyz="0 0 0" rpy="0 0 0" /> 
     <axis xyz="0 1 0" rpy="0 0 0" />
     <limit effort="${wheel_joint_effort_limit}" velocity="${wheel_joint_velocity_limit}"/>
     <joint_properties damping="${wheel_joint_damping}" friction="{wheel_joint_friction}"/>
