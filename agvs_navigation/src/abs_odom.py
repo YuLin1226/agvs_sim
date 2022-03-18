@@ -11,12 +11,13 @@ class AccurateODOM():
 
     def __init__(self) -> None:
         
-        self.init_pos_x     = rospy.get_param("init_pos_x"  , 0)
+        self.init_pos_x     = rospy.get_param("init_pos_x"  , -1)
         self.init_pos_y     = rospy.get_param("init_pos_y"  , 0)
         self.init_pos_yaw   = rospy.get_param("init_pos_yaw", 0)
 
         self._broadcaster = tf2_ros.StaticTransformBroadcaster()
-        self._sub = rospy.Subscriber(   name="/gazebo/model_states",
+        self._sub = rospy.Subscriber(   
+                                        name="/gazebo/model_states",
                                         data_class=gazebo_msgs.msg.ModelStates,
                                         callback=self._sub_Callback
                                     )
@@ -55,7 +56,7 @@ if __name__ == '__main__':
     try:
 
         AccurateODOM()
-        rospy.init_node('World Position Node')
+        rospy.init_node('World_Position_Node')
         rate = rospy.Rate(10)
 
         while not rospy.is_shutdown():
