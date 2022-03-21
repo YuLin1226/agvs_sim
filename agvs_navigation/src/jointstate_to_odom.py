@@ -9,6 +9,9 @@ import geometry_msgs.msg
 import time
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 from math import cos, sin, atan2
+
+from nav_msgs.msg import Odometry, Path
+from geometry_msgs.msg import Pose, Twist, Transform, TransformStamped, PoseStamped
 import numpy as np
 
 class JointStateToODOM():
@@ -30,6 +33,9 @@ class JointStateToODOM():
         self.last_rear_steering_pos   = 0
         self.last_front_driving_pos   = 0
         self.last_rear_driving_pos    = 0
+
+        self.pub_odom = rospy.Publisher('/path_by_hand', Path, queue_size=1)
+        self.path = Path()
 
         self._broadcaster = tf2_ros.StaticTransformBroadcaster()
         self._sub = rospy.Subscriber(   
@@ -101,6 +107,24 @@ class JointStateToODOM():
 
 
         print("\nPosition X: %f\nPosition Y: %f\nHeading Yaw: %f"%(self.last_pos_x, self.last_pos_y, self.last_pos_yaw))
+
+        cmd = PoseStamped()
+        cmd.pose.position.x = self.last_pos_x
+        cmd.pose.position.y = self.last_pos_y
+        cmd.pose.position.z = 0.35
+
+        quaternion = quaternion_from_euler(0, 0, self.last_pos_yaw)
+        cmd.pose.orientation.x = quaternion[0]
+        cmd.pose.orientation.y = quaternion[1]
+        cmd.pose.orientation.z = quaternion[2]
+        cmd.pose.orientation.w = quaternion[3]
+
+        self.path.header.frame_id = "/map"
+        # self.path.header.stamp = rospy.Time.now()
+        self.path.poses.append(cmd)
+        self.pub_odom.publish(self.path)
+
+
 
         self.last_front_steering_pos  = data.position[idx_front_steering]
         self.last_rear_steering_pos   = data.position[idx_rear_steering] 
