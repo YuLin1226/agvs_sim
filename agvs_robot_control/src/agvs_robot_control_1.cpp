@@ -464,7 +464,7 @@ void UpdateControl_cmd_vel()
   std_msgs::Float64 theta2_msg;
 
   // Reference for velocity controllers
-  double Kp = 1.0;  // ref is in [m/s] while VelocityController expects ?
+  double Kp = 10.0;  // ref is in [m/s] while VelocityController expects ?
   v1_msg.data = v_1 * Kp;
   v2_msg.data = v_2 * Kp;
 
