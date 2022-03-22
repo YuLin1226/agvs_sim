@@ -126,6 +126,8 @@ public:
   // Indexes to joint_states
   int fwd_vel_, bwd_vel_;
   int fwd_pos_, bwd_pos_;
+  int fwd_drive_pos_, bwd_drive_pos_;
+  int fwd_steer_pos_, bwd_steer_pos_;
 
   // Robot Speeds
   double linearSpeedXMps_;
@@ -182,6 +184,13 @@ public:
   double orientation_diff_y_;
   double orientation_diff_z_;
   double orientation_diff_w_;
+
+
+  double last_fwd_drive_pos_;
+  double last_fwd_steer_pos_;
+  double last_bwd_drive_pos_;
+  double last_bwd_steer_pos_;
+
 
   // Parameter that defines if odom tf is published or not
   bool publish_odom_tf_;
@@ -325,10 +334,12 @@ int starting()
   // Initialize joint indexes according to joint names 
   if (read_state_) {
     vector<string> joint_names = joint_state_.name;
-    fwd_vel_ = find (joint_names.begin(),joint_names.end(), string(joint_front_wheel)) - joint_names.begin();
-    bwd_vel_ = find (joint_names.begin(),joint_names.end(), string(joint_back_wheel)) - joint_names.begin();
-    fwd_pos_ = find (joint_names.begin(),joint_names.end(), string(joint_front_motor_wheel)) - joint_names.begin();
-    bwd_pos_ = find (joint_names.begin(),joint_names.end(), string(joint_back_motor_wheel)) - joint_names.begin();
+    // fwd_vel_ = find (joint_names.begin(),joint_names.end(), string(joint_front_wheel)) - joint_names.begin();
+    // bwd_vel_ = find (joint_names.begin(),joint_names.end(), string(joint_back_wheel)) - joint_names.begin();
+    fwd_drive_pos_ = find (joint_names.begin(),joint_names.end(), string(joint_front_wheel)) - joint_names.begin();
+    bwd_drive_pos_ = find (joint_names.begin(),joint_names.end(), string(joint_back_wheel)) - joint_names.begin();
+    fwd_steer_pos_ = find (joint_names.begin(),joint_names.end(), string(joint_front_motor_wheel)) - joint_names.begin();
+    bwd_steer_pos_ = find (joint_names.begin(),joint_names.end(), string(joint_back_motor_wheel)) - joint_names.begin();
     return 0;
     }
   else return -1;
@@ -386,6 +397,43 @@ void UpdateOdometry(){
 	// Positions
 	robot_pose_px_ += robot_pose_vx_ * fSamplePeriod;
 	robot_pose_py_ += robot_pose_vy_ * fSamplePeriod;
+}
+
+void UpdateOdometry_1(){
+
+  // STEP 1
+	double diff_fwd_drive_pos_, diff_bwd_drive_pos_, diff_fwd_steer_pos_, diff_bwd_steer_pos_;
+	diff_fwd_drive_pos_ = (joint_state_.position[fwd_drive_pos_] - last_fwd_drive_pos_) * (agvs_wheel_diameter_ / 2.0);
+  diff_bwd_drive_pos_ = (joint_state_.position[bwd_drive_pos_] - last_bwd_drive_pos_) * (agvs_wheel_diameter_ / 2.0);
+	diff_fwd_steer_pos_ = joint_state_.position[fwd_steer_pos_] - last_fwd_steer_pos_;
+	diff_bwd_steer_pos_ = joint_state_.position[bwd_steer_pos_] - last_bwd_steer_pos_;
+
+  double dx_fwd = diff_fwd_drive_pos_ * cos(last_fwd_steer_pos_ + diff_fwd_steer_pos_/2);
+  double dy_fwd = diff_fwd_drive_pos_ * sin(last_fwd_steer_pos_ + diff_fwd_steer_pos_/2);
+  double dx_bwd = diff_bwd_drive_pos_ * cos(last_bwd_steer_pos_ + diff_bwd_steer_pos_/2);
+  double dy_bwd = diff_bwd_drive_pos_ * sin(last_bwd_steer_pos_ + diff_bwd_steer_pos_/2);
+
+  // STEP 2
+
+  double diff_pos_x    = (dx_fwd + dx_bwd)/2;
+  double diff_pos_y    = (dy_fwd + dy_bwd)/2;
+  double diff_pos_yaw  = (dy_fwd - dy_bwd)*1.04384134;
+
+  robot_pose_pa_ += diff_pos_yaw;
+  robot_pose_pa_ = radnorm2( robot_pose_pa_ );
+	robot_pose_px_ += diff_pos_x*cos(robot_pose_pa_) - diff_pos_y*sin(robot_pose_pa_);
+	robot_pose_py_ += diff_pos_x*sin(robot_pose_pa_) + diff_pos_y*cos(robot_pose_pa_);
+
+  last_fwd_drive_pos_ = joint_state_.position[fwd_drive_pos_];
+  last_fwd_steer_pos_ = joint_state_.position[fwd_steer_pos_];
+  last_bwd_drive_pos_ = joint_state_.position[bwd_drive_pos_];
+  last_bwd_steer_pos_ = joint_state_.position[bwd_steer_pos_];
+
+  std::cout << "=========== Odometry Update ==========" << std::endl;
+  std::cout << "Position  X: " << robot_pose_px_ << std::endl;
+  std::cout << "Position  Y: " << robot_pose_py_ << std::endl;
+  std::cout << "Heading Yaw: " << robot_pose_pa_ << std::endl;
+
 }
 
 // Publish robot odometry tf and topic depending 
@@ -699,7 +747,7 @@ bool spin()
       {
 	    while(ros::ok() && node_handle_.ok()) {
           UpdateControl_cmd_vel();
-          UpdateOdometry();
+          UpdateOdometry_1();
           PublishOdometry();
           diagnostic_.update();
           ros::spinOnce();
