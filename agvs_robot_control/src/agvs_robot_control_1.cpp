@@ -60,6 +60,7 @@
 
 #define AGVS_WHEEL_DIAMETER	          0.2195      // Default wheel diameter
 #define DEFAULT_DIST_CENTER_TO_WHEEL  0.479       // Default distance center to motorwheel
+#define VEL_KP  10.0       // Default distance center to motorwheel
     
 #define MAX_ELEVATOR_POSITION	0.05		// meters
 
@@ -170,6 +171,7 @@ public:
   // Robot configuration parameters 
   double agvs_wheel_diameter_; 
   double agvs_dist_to_center_;
+  double vel_kp_;
 
   // IMU values
   double ang_vel_x_;
@@ -244,6 +246,8 @@ AGVSControllerClass(ros::NodeHandle h) : diagnostic_(),
 		agvs_wheel_diameter_ = AGVS_WHEEL_DIAMETER; 
   if (!private_node_handle_.getParam("agvs_dist_to_center", agvs_dist_to_center_))
 		agvs_dist_to_center_ = DEFAULT_DIST_CENTER_TO_WHEEL;
+  if (!private_node_handle_.getParam("vel_kp", vel_kp_))
+		vel_kp_ = VEL_KP;
   //ROS_INFO("agvs_wheel_diameter_ = %5.2f", agvs_wheel_diameter_);
   //ROS_INFO("agvs_dist_to_center_ = %5.2f", agvs_dist_to_center_);
 
@@ -429,10 +433,10 @@ void UpdateOdometry_1(){
   last_bwd_drive_pos_ = joint_state_.position[bwd_drive_pos_];
   last_bwd_steer_pos_ = joint_state_.position[bwd_steer_pos_];
 
-  std::cout << "=========== Odometry Update ==========" << std::endl;
-  std::cout << "Position  X: " << robot_pose_px_ << std::endl;
-  std::cout << "Position  Y: " << robot_pose_py_ << std::endl;
-  std::cout << "Heading Yaw: " << robot_pose_pa_ << std::endl;
+  // std::cout << "=========== Odometry Update ==========" << std::endl;
+  // std::cout << "Position  X: " << robot_pose_px_ << std::endl;
+  // std::cout << "Position  Y: " << robot_pose_py_ << std::endl;
+  // std::cout << "Heading Yaw: " << robot_pose_pa_ << std::endl;
 
 }
 
@@ -512,9 +516,8 @@ void UpdateControl_cmd_vel()
   std_msgs::Float64 theta2_msg;
 
   // Reference for velocity controllers
-  double Kp = 10.0;  // ref is in [m/s] while VelocityController expects ?
-  v1_msg.data = v_1 * Kp;
-  v2_msg.data = v_2 * Kp;
+  v1_msg.data = v_1 * vel_kp_;
+  v2_msg.data = v_2 * vel_kp_;
 
   theta1_msg.data = theta_1;
   theta2_msg.data = theta_2;
