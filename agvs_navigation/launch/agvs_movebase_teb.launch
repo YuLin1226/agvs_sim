@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
 <launch>
-    <arg name="use_rviz" default="false" />
-    <arg name="use_move_base" default="false"/>
+    <arg name="use_rviz" default="true" />
+    <arg name="use_move_base" default="true"/>
     <arg name="use_amcl" default="false"/>
-    <arg name="use_ekf" default="false"/>
+    <arg name="use_ekf" default="true"/>
     <arg name="init_x" default="-1.0" />
     <arg name="init_y" default="0.0" />
     <arg name="init_a" default="0.0" />

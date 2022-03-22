@@ -5,7 +5,7 @@ agvs_robot_control:
       # kinematic parameters 
      agvs_wheel_diameter: 0.2195
      agvs_dist_to_center: 0.479
-     vel_kp: 3.0
+     vel_kp: 1.0
 
      publish_odom_tf: false
      imu_topic: /agvs/imu_data
