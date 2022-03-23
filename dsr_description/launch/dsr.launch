@@ -24,7 +24,7 @@
 
   <!-- Load the URDF into the ROS Parameter Server -->
   <param name="robot_description"
-         command="$(find xacro)/xacro --inorder '$(find dsr_description)/urdf/DSR.urdf.xacro' robotName:=$(arg robot_name)" />
+         command="$(find xacro)/xacro --inorder '$(find dsr_description)/urdf/DSR_robot.urdf.xacro' robotName:=$(arg robot_name)" />
          
   
   
