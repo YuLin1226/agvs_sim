@@ -2,8 +2,7 @@
 <robot name="$(arg robotName)"  xmlns:xacro="http://ros.org/wiki/xacro">
   
 
-        <!-- IMU SENSOR -->
-
+    <!-- IMU SENSOR -->
     <xacro:macro name="imu" params ="prefix x y z"> 
 
 
