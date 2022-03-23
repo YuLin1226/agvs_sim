@@ -21,3 +21,7 @@ This package contains all the launch and config files to launch all the needed p
 
 - Control robot without joystick: 
     ```$ rosrun rqt_gui rqt_gui``` & add publisher (```agvs_robot_control/command```)
+
+
+## pkg with dsr prefix
+These pkgs are for modular design.
