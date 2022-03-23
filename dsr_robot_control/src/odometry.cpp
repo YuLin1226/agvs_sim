@@ -1,49 +1,7 @@
-/*********************************************************************
- * Software License Agreement (BSD License)
- *
- *  Copyright (c) 2013, PAL Robotics, S.L.
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *   * Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *   * Redistributions in binary form must reproduce the above
- *     copyright notice, this list of conditions and the following
- *     disclaimer in the documentation and/or other materials provided
- *     with the distribution.
- *   * Neither the name of the PAL Robotics nor the names of its
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- *  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- *  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- *  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- *  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- *  POSSIBILITY OF SUCH DAMAGE.
- *********************************************************************/
-
-/*
- * Author: Luca Marchionni
- * Author: Bence Magyar
- * Author: Enrique Fernández
- * Author: Paul Mathieu
- */
-
-#include <diff_drive_controller/odometry.h>
-
+#include "../include/odometry.h"
 #include <boost/bind.hpp>
 
-namespace diff_drive_controller
+namespace dsr_controller
 {
   namespace bacc = boost::accumulators;
 
@@ -54,15 +12,9 @@ namespace diff_drive_controller
   , heading_(0.0)
   , linear_(0.0)
   , angular_(0.0)
-  , wheel_separation_(0.0)
-  , left_wheel_radius_(0.0)
-  , right_wheel_radius_(0.0)
-  , left_wheel_old_pos_(0.0)
-  , right_wheel_old_pos_(0.0)
   , velocity_rolling_window_size_(velocity_rolling_window_size)
   , linear_acc_(RollingWindow::window_size = velocity_rolling_window_size)
   , angular_acc_(RollingWindow::window_size = velocity_rolling_window_size)
-  , integrate_fun_(boost::bind(&Odometry::integrateExact, this, _1, _2))
   {
   }
 
@@ -73,40 +25,43 @@ namespace diff_drive_controller
     timestamp_ = time;
   }
 
-  bool Odometry::update(double left_pos, double right_pos, const ros::Time &time)
+  bool Odometry::update(double steer_front_pos, double steer_rear_pos, double drive_front_pos, double drive_rear_pos, const ros::Time &time)
   {
     /// Get current wheel joint positions:
-    const double left_wheel_cur_pos  = left_pos  * left_wheel_radius_;
-    const double right_wheel_cur_pos = right_pos * right_wheel_radius_;
+    const double steer_front_wheel_cur_pos  = steer_front_pos;
+    const double steer_rear_wheel_cur_pos   = steer_rear_pos;
+    const double drive_front_wheel_cur_pos  = drive_front_pos  * wheel_diameter_/2.0;
+    const double drive_rear_wheel_cur_pos   = drive_rear_pos * wheel_diameter_/2.0;
 
     /// Estimate velocity of wheels using old and current position:
-    const double left_wheel_est_vel  = left_wheel_cur_pos  - left_wheel_old_pos_;
-    const double right_wheel_est_vel = right_wheel_cur_pos - right_wheel_old_pos_;
-
-    /// Update old position with current:
-    left_wheel_old_pos_  = left_wheel_cur_pos;
-    right_wheel_old_pos_ = right_wheel_cur_pos;
-
-    /// Compute linear and angular diff:
-    const double linear  = (right_wheel_est_vel + left_wheel_est_vel) * 0.5 ;
-    const double angular = (right_wheel_est_vel - left_wheel_est_vel) / wheel_separation_;
+    const double steer_front_wheel_est_vel  = steer_front_wheel_cur_pos  - steer_front_wheel_old_pos_;
+    const double steer_rear_wheel_est_vel   = steer_rear_wheel_cur_pos - steer_rear_wheel_old_pos_;
+    const double drive_front_wheel_est_vel  = drive_front_wheel_cur_pos  - drive_front_wheel_old_pos_;
+    const double drive_rear_wheel_est_vel   = drive_rear_wheel_cur_pos - drive_rear_wheel_old_pos_;
 
     /// Integrate odometry:
-    integrate_fun_(linear, angular);
+    integrateXY(steer_front_wheel_est_vel, steer_rear_wheel_est_vel, drive_front_wheel_est_vel, drive_rear_wheel_est_vel);
 
-    /// We cannot estimate the speed with very small time intervals:
-    const double dt = (time - timestamp_).toSec();
-    if (dt < 0.0001)
-      return false; // Interval too small to integrate with
+    /// Update old position with current:
+    steer_front_wheel_old_pos_  = steer_front_wheel_cur_pos;
+    steer_rear_wheel_old_pos_   = steer_rear_wheel_cur_pos;
+    drive_front_wheel_old_pos_  = drive_front_wheel_cur_pos;
+    drive_rear_wheel_old_pos_   = drive_rear_wheel_cur_pos;
+    
 
-    timestamp_ = time;
+    // /// We cannot estimate the speed with very small time intervals:
+    // const double dt = (time - timestamp_).toSec();
+    // if (dt < 0.0001)
+    //   return false; // Interval too small to integrate with
 
-    /// Estimate speeds using a rolling mean to filter them out:
-    linear_acc_(linear/dt);
-    angular_acc_(angular/dt);
+    // timestamp_ = time;
 
-    linear_ = bacc::rolling_mean(linear_acc_);
-    angular_ = bacc::rolling_mean(angular_acc_);
+    // /// Estimate speeds using a rolling mean to filter them out:
+    // linear_acc_(linear/dt);
+    // angular_acc_(angular/dt);
+
+    // linear_ = bacc::rolling_mean(linear_acc_);
+    // angular_ = bacc::rolling_mean(angular_acc_);
 
     return true;
   }
@@ -123,11 +78,10 @@ namespace diff_drive_controller
     integrate_fun_(linear * dt, angular * dt);
   }
 
-  void Odometry::setWheelParams(double wheel_separation, double left_wheel_radius, double right_wheel_radius)
+  void Odometry::setParams(double wheel_diameter, double h)
   {
-    wheel_separation_   = wheel_separation;
-    left_wheel_radius_  = left_wheel_radius;
-    right_wheel_radius_ = right_wheel_radius;
+    wheel_diameter_ = wheel_diameter;
+    h_ = h;
   }
 
   void Odometry::setVelocityRollingWindowSize(size_t velocity_rolling_window_size)
@@ -165,6 +119,22 @@ namespace diff_drive_controller
       x_       +=  r * (sin(heading_) - sin(heading_old));
       y_       += -r * (cos(heading_) - cos(heading_old));
     }
+  }
+
+  void Odometry::integrateXY(double steer_front_diff_pos, double steer_rear_diff_pos, double drive_front_diff_pos, double drive_rear_diff_pos)
+  {
+    const double dx_front_wheel_pos = drive_front_diff_pos * cos(steer_front_wheel_old_pos_ + steer_front_diff_pos/2);
+    const double dy_front_wheel_pos = drive_front_diff_pos * sin(steer_front_wheel_old_pos_ + steer_front_diff_pos/2);
+    const double dx_rear_wheel_pos = drive_rear_diff_pos * cos(steer_rear_wheel_old_pos_ + steer_rear_diff_pos/2);
+    const double dy_rear_wheel_pos = drive_rear_diff_pos * sin(steer_rear_wheel_old_pos_ + steer_rear_diff_pos/2);
+
+    double dx_pos    = (dx_front_wheel_pos + dx_rear_wheel_pos)/2.0;
+    double dy_pos    = (dy_front_wheel_pos + dy_rear_wheel_pos)/2.0;
+    double dheading_pos  = (dy_front_wheel_pos - dy_rear_wheel_pos)*h_;
+
+    heading_ += dheading_pos;
+    x_ += dx_pos*cos(heading_) - dy_pos*sin(heading_);
+    y_ += dx_pos*sin(heading_) + dy_pos*cos(heading_);
   }
 
   void Odometry::resetAccumulators()

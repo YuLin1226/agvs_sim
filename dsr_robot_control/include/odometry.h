@@ -1,46 +1,4 @@
-/*********************************************************************
- * Software License Agreement (BSD License)
- *
- *  Copyright (c) 2013, PAL Robotics, S.L.
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *   * Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *   * Redistributions in binary form must reproduce the above
- *     copyright notice, this list of conditions and the following
- *     disclaimer in the documentation and/or other materials provided
- *     with the distribution.
- *   * Neither the name of the PAL Robotics nor the names of its
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- *  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- *  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- *  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- *  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- *  POSSIBILITY OF SUCH DAMAGE.
- *********************************************************************/
-
-/*
- * Author: Luca Marchionni
- * Author: Bence Magyar
- * Author: Enrique Fernández
- * Author: Paul Mathieu
- */
-
 #pragma once
-
 
 #include <ros/time.h>
 #include <boost/accumulators/accumulators.hpp>
@@ -48,7 +6,7 @@
 #include <boost/accumulators/statistics/rolling_mean.hpp>
 #include <boost/function.hpp>
 
-namespace diff_drive_controller
+namespace dsr_controller
 {
   namespace bacc = boost::accumulators;
 
@@ -84,7 +42,7 @@ namespace diff_drive_controller
      * \param time      Current time
      * \return true if the odometry is actually updated
      */
-    bool update(double left_pos, double right_pos, const ros::Time &time);
+    bool update(double steer_front_pos, double steer_rear_pos, double drive_front_pos, double drive_rear_pos, const ros::Time &time);
 
     /**
      * \brief Updates the odometry class with latest velocity command
@@ -145,7 +103,7 @@ namespace diff_drive_controller
      * \param left_wheel_radius  Left wheel radius [m]
      * \param right_wheel_radius Right wheel radius [m]
      */
-    void setWheelParams(double wheel_separation, double left_wheel_radius, double right_wheel_radius);
+    void setParams(double wheel_diameter, double h);
 
     /**
      * \brief Velocity rolling window size setter
@@ -173,6 +131,8 @@ namespace diff_drive_controller
      */
     void integrateExact(double linear, double angular);
 
+    void integrateXY(double steer_front_diff_pos, double steer_rear_diff_pos, double drive_front_diff_pos, double drive_rear_diff_pos);
+
     /**
      *  \brief Reset linear and angular accumulators
      */
@@ -191,13 +151,17 @@ namespace diff_drive_controller
     double angular_; // [rad/s]
 
     /// Wheel kinematic parameters [m]:
-    double wheel_separation_;
-    double left_wheel_radius_;
-    double right_wheel_radius_;
+    double wheel_diameter_;
 
-    /// Previou wheel position/state [rad]:
-    double left_wheel_old_pos_;
-    double right_wheel_old_pos_;
+    // Odometry parameter from H matrix
+    double h_;
+
+    /// Previou wheel position/state [steer -> rad], [drive -> m]:
+    double steer_front_wheel_old_pos_;
+    double steer_rear_wheel_old_pos_;
+    double drive_front_wheel_old_pos_;
+    double drive_rear_wheel_old_pos_;
+
 
     /// Rolling mean accumulators for the linar and angular velocities:
     size_t velocity_rolling_window_size_;
