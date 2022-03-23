@@ -9,7 +9,7 @@
   <!-- roslaunch arguments -->
   <arg name="debug" default="false"/>
   <arg name="gui" default="true"/>
-  <arg name="world_used" default="indoors12.world"/>
+  <arg name="world_used" default="agvs.world"/>
   <arg name="robot_name" default="DSR"/>
 
   <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
@@ -33,6 +33,6 @@
         args="-urdf -model $(arg robot_name) -param robot_description -x -3 -z 0.35"/>
 
   <!-- ros_control agvs launch file -->
-  <!-- <include file="$(find agvs_control)/launch/agvs_control.launch" /> -->
+  <include file="$(find dsr_control)/launch/dsr_control.launch" />
 
 </launch>

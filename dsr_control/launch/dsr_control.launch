@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="robotName" default="DSR"/>
+
+  <!-- load the controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+        output="screen" ns="$(arg robotName)"
+        args="  joint_back_wheel_controller
+                joint_front_wheel_controller
+                joint_back_motor_wheel_controller
+                joint_front_motor_wheel_controller
+                joint_read_state_controller
+                --shutdown-timeout 1"/>
+
+  <!-- Load joint controller configurations from YAcd .ML file to parameter server -->
+  <rosparam file="$(find dsr_control)/config/dsr_control.yaml" command="load" subst_value="True"/>
+
+  <!-- once the joint_state is published, run the robot_state_publisher, the namespace has to be adapted --> 
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" 
+        respawn="false" output="screen">
+    <remap from="/joint_states" to="/DSR/joint_states" />
+  </node>
+    
+</launch>
+
