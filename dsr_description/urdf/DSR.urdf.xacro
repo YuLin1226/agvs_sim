@@ -1,8 +1,9 @@
 <?xml version="1.0" ?>
-<robot name="$(arg robotName)" xmlns:xacro="http://ros.org/wiki/xacro">
+<robot name="$(arg robotName)"  xmlns:xacro="http://ros.org/wiki/xacro">
 
     <!-- Import all Gazebo-customization elements, including Gazebo colors -->
-    
+    <xacro:include filename="$(find dsr_description)/urdf/DSR.gazebo" />
+
     <!-- Xacro Properties -->
     <xacro:property name="PI" value="3.1415926535897931"/>
     <xacro:property name="wheel_offset_x" value="0.479" />
@@ -88,6 +89,23 @@
     <!-- DSR Macro -->
     <xacro:macro name="DSR_BODY" params="prefix">
 
+        <!-- Link: base_footprint -->
+        <link name="${prefix}_base_footprint">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <box size="0.001 0.001 0.001" />
+                </geometry>
+            </visual>
+        </link>
+
+        <!-- Joint: base_footprint & base_link -->
+        <joint name="${prefix}_base_footprint_joint" type="fixed">
+            <origin xyz="0 0 -0.005" rpy="0 0 0" />
+            <parent link="${prefix}_base_footprint"/>
+            <child link="${prefix}_base_link" />
+        </joint>
+
         <!-- Link: base_link -->
         <link name="${prefix}_base_link">
             <xacro:Box_Inertia  m="${base_link_mass}" 
@@ -97,7 +115,8 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <box size="${base_link_x} ${base_link_y} ${base_link_z}"/>
+                    <!-- <box size="${base_link_x} ${base_link_y} ${base_link_z}"/> -->
+                    <mesh filename="package://agvs_description/meshes/chassis_agvs.dae"/>
                 </geometry>       
                 <material name="red">
                     <color rgba="0.5 0.1 0.1 1"/>
@@ -106,7 +125,8 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0 " />
                 <geometry>
-                    <box size="${base_link_x} ${base_link_y} ${base_link_z}"/>
+                    <!-- <box size="${base_link_x} ${base_link_y} ${base_link_z}"/> -->
+                    <mesh filename="package://agvs_description/meshes/chassis_agvs.dae"/>
                 </geometry>
             </collision>     
         </link>
@@ -159,9 +179,9 @@
         <!-- Link: back wheel link -->
         <link name="${prefix}_back_wheel_link">
             <xacro:Wheel_Inertia    m="${wheel_mass}" 
-                                    x="${wheel_ixx}"  
-                                    y="${wheel_iyy}" 
-                                    z="${wheel_izz}"/>
+                                    ixx="${wheel_ixx}"  
+                                    iyy="${wheel_iyy}" 
+                                    izz="${wheel_izz}"/>
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" /> 
                 <geometry>
@@ -249,9 +269,9 @@
         <!-- Link: front wheel link -->
         <link name="${prefix}_front_wheel_link">
             <xacro:Wheel_Inertia    m="${wheel_mass}" 
-                                    x="${wheel_ixx}"  
-                                    y="${wheel_iyy}" 
-                                    z="${wheel_izz}"/>
+                                    ixx="${wheel_ixx}"  
+                                    iyy="${wheel_iyy}" 
+                                    izz="${wheel_izz}"/>
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" /> 
                 <geometry>
@@ -294,9 +314,9 @@
         <!-- Link: left wheel link -->
         <link name="${prefix}_left_wheel_link">
             <xacro:Wheel_Inertia    m="${side_wheel_mass}" 
-                                    x="${side_wheel_ixx}"  
-                                    y="${side_wheel_iyy}" 
-                                    z="${side_wheel_izz}"/>
+                                    ixx="${side_wheel_ixx}"  
+                                    iyy="${side_wheel_iyy}" 
+                                    izz="${side_wheel_izz}"/>
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" /> 
                 <geometry>
@@ -340,9 +360,9 @@
         <!-- Link: right wheel link -->
         <link name="${prefix}_right_wheel_link">
             <xacro:Wheel_Inertia    m="${side_wheel_mass}" 
-                                    x="${side_wheel_ixx}"  
-                                    y="${side_wheel_iyy}" 
-                                    z="${side_wheel_izz}"/>
+                                    ixx="${side_wheel_ixx}"  
+                                    iyy="${side_wheel_iyy}" 
+                                    izz="${side_wheel_izz}"/>
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" /> 
                 <geometry>
