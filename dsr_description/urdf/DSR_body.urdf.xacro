@@ -87,10 +87,10 @@
     </xacro:macro>
 
     <!-- DSR Macro -->
-    <xacro:macro name="DSR_BODY" params="prefix">
+    <xacro:macro name="DSR_BODY">
 
         <!-- Link: base_footprint -->
-        <link name="${prefix}_base_footprint">
+        <link name="base_footprint">
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
@@ -100,14 +100,14 @@
         </link>
 
         <!-- Joint: base_footprint & base_link -->
-        <joint name="${prefix}_base_footprint_joint" type="fixed">
+        <joint name="base_footprint_joint" type="fixed">
             <origin xyz="0 0 -0.005" rpy="0 0 0" />
-            <parent link="${prefix}_base_footprint"/>
-            <child link="${prefix}_base_link" />
+            <parent link="base_footprint"/>
+            <child link="base_link" />
         </joint>
 
         <!-- Link: base_link -->
-        <link name="${prefix}_base_link">
+        <link name="base_link">
             <xacro:Box_Inertia  m="${base_link_mass}" 
                                 x="${base_link_x}"  
                                 y="${base_link_y}" 
@@ -132,7 +132,7 @@
         </link>
 
         <!-- Link: back motor link -->
-        <link name="${prefix}_back_motor_link">
+        <link name="back_motor_link">
             <xacro:Box_Inertia  m="${motor_mass}" 
                                 x="${motor_ixx}"  
                                 y="${motor_iyy}" 
@@ -155,9 +155,9 @@
         </link>
 
         <!-- Joint: base_link & back motor -->
-        <joint name="${prefix}_joint_back_motor" type="continuous">
-            <parent link="${prefix}_base_link"/>
-            <child link="${prefix}_back_motor_link"/>
+        <joint name="joint_back_motor" type="continuous">
+            <parent link="base_link"/>
+            <child link="back_motor_link"/>
             <origin xyz="-${wheel_offset_x} ${wheel_offset_y} ${motor_wheel_offset_z}" rpy="0 0 0" /> 
             <axis xyz="0 0 1" rpy="0 0 0" />
             <limit effort="${steer_joint_effort_limit}" velocity="${steer_joint_velocity_limit}" lower="-1.5708" upper="1.5708"/>
@@ -165,19 +165,19 @@
         </joint>
 
         <!-- Transmission: back motor -->
-        <transmission name="${prefix}_joint_bmw_trans">
+        <transmission name="joint_bmw_trans">
             <type>transmission_interface/SimpleTransmission</type>
-            <joint name="${prefix}_joint_back_motor">
+            <joint name="joint_back_motor">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>	 
             </joint>
-            <actuator name="${prefix}_joint_bmw_motor">
+            <actuator name="joint_bmw_motor">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>	    
                 <mechanicalReduction>${motor_wheel_mechanical_reduction}</mechanicalReduction>
             </actuator>
         </transmission>
 
         <!-- Link: back wheel link -->
-        <link name="${prefix}_back_wheel_link">
+        <link name="back_wheel_link">
             <xacro:Wheel_Inertia    m="${wheel_mass}" 
                                     ixx="${wheel_ixx}"  
                                     iyy="${wheel_iyy}" 
@@ -200,9 +200,9 @@
         </link>
 
         <!-- Joint: back motor & back wheel link -->
-        <joint name="${prefix}_joint_back_wheel" type="continuous">
-            <parent link="${prefix}_back_motor_link"/>
-            <child link="${prefix}_back_wheel_link"/>
+        <joint name="joint_back_wheel" type="continuous">
+            <parent link="back_motor_link"/>
+            <child link="back_wheel_link"/>
             <origin xyz="0 0 0" rpy="0 0 0" /> 
             <axis xyz="0 1 0" rpy="0 0 0" />
             <limit effort="${wheel_joint_effort_limit}" velocity="${wheel_joint_velocity_limit}"/>
@@ -210,19 +210,19 @@
         </joint>
 
         <!-- Transmission: back wheel -->
-        <transmission name="${prefix}_joint_bw_trans">
+        <transmission name="joint_bw_trans">
             <type>transmission_interface/SimpleTransmission</type>
-            <joint name="${prefix}_joint_back_wheel">
+            <joint name="joint_back_wheel">
                 <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>	 
             </joint>
-            <actuator name="${prefix}_joint_bw_motor">
+            <actuator name="joint_bw_motor">
                 <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>	    
                 <mechanicalReduction>${wheel_mechanical_reduction}</mechanicalReduction>
             </actuator>
         </transmission>
 
         <!-- Link: front motor link -->
-        <link name="${prefix}_front_motor_link">
+        <link name="front_motor_link">
             <xacro:Box_Inertia  m="${motor_mass}" 
                                 x="${motor_ixx}"  
                                 y="${motor_iyy}" 
@@ -245,9 +245,9 @@
         </link>
 
         <!-- Joint: base_link & front motor -->
-        <joint name="${prefix}_joint_front_motor" type="continuous">
-            <parent link="${prefix}_base_link"/>
-            <child link="${prefix}_front_motor_link"/>
+        <joint name="joint_front_motor" type="continuous">
+            <parent link="base_link"/>
+            <child link="front_motor_link"/>
             <origin xyz="${wheel_offset_x} ${wheel_offset_y} ${motor_wheel_offset_z}" rpy="0 0 0" /> 
             <axis xyz="0 0 1" rpy="0 0 0" />
             <limit effort="${steer_joint_effort_limit}" velocity="${steer_joint_velocity_limit}" lower="-1.5708" upper="1.5708"/>
@@ -255,19 +255,19 @@
         </joint>
 
         <!-- Transmission: front motor -->
-        <transmission name="${prefix}_joint_fmw_trans">
+        <transmission name="joint_fmw_trans">
             <type>transmission_interface/SimpleTransmission</type>
-            <joint name="${prefix}_joint_front_motor">
+            <joint name="joint_front_motor">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>	 
             </joint>
-            <actuator name="${prefix}_joint_fmw_motor">
+            <actuator name="joint_fmw_motor">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>	    
                 <mechanicalReduction>${motor_wheel_mechanical_reduction}</mechanicalReduction>
             </actuator>
         </transmission>
 
         <!-- Link: front wheel link -->
-        <link name="${prefix}_front_wheel_link">
+        <link name="front_wheel_link">
             <xacro:Wheel_Inertia    m="${wheel_mass}" 
                                     ixx="${wheel_ixx}"  
                                     iyy="${wheel_iyy}" 
@@ -290,9 +290,9 @@
         </link>
 
         <!-- Joint: front motor & front wheel link -->
-        <joint name="${prefix}_joint_front_wheel" type="continuous">
-            <parent link="${prefix}_front_motor_link"/>
-            <child link="${prefix}_front_wheel_link"/>
+        <joint name="joint_front_wheel" type="continuous">
+            <parent link="front_motor_link"/>
+            <child link="front_wheel_link"/>
             <origin xyz="0 0 0" rpy="0 0 0" /> 
             <axis xyz="0 1 0" rpy="0 0 0" />
             <limit effort="${wheel_joint_effort_limit}" velocity="${wheel_joint_velocity_limit}"/>
@@ -300,19 +300,19 @@
         </joint>
 
         <!-- Transmission: back wheel -->
-        <transmission name="${prefix}_joint_fw_trans">
+        <transmission name="joint_fw_trans">
             <type>transmission_interface/SimpleTransmission</type>
-            <joint name="${prefix}_joint_front_wheel">
+            <joint name="joint_front_wheel">
                 <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>	 
             </joint>
-            <actuator name="${prefix}_joint_fw_motor">
+            <actuator name="joint_fw_motor">
                 <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>	    
                 <mechanicalReduction>${wheel_mechanical_reduction}</mechanicalReduction>
             </actuator>
         </transmission>
 
         <!-- Link: left wheel link -->
-        <link name="${prefix}_left_wheel_link">
+        <link name="left_wheel_link">
             <xacro:Wheel_Inertia    m="${side_wheel_mass}" 
                                     ixx="${side_wheel_ixx}"  
                                     iyy="${side_wheel_iyy}" 
@@ -336,9 +336,9 @@
         </link>
 
         <!-- Joint: base link & left wheel link -->
-        <joint name="${prefix}_joint_left_wheel" type="continuous">
-            <parent link="${prefix}_base_link"/>
-            <child link="${prefix}_left_wheel_link"/>
+        <joint name="joint_left_wheel" type="continuous">
+            <parent link="base_link"/>
+            <child link="left_wheel_link"/>
             <origin xyz="0 ${side_wheel_offset_y} ${side_wheel_offset_z}" rpy="0 0 0" /> 
             <axis xyz="0 1 0" rpy="0 0 0" />
             <limit effort="${wheel_joint_effort_limit}" velocity="${wheel_joint_velocity_limit}"/>
@@ -346,19 +346,19 @@
         </joint>
 
         <!-- Transmission: left wheel -->
-        <transmission name="${prefix}_joint_lw_trans">
+        <transmission name="joint_lw_trans">
             <type>transmission_interface/SimpleTransmission</type>
-            <joint name="${prefix}_joint_left_wheel">
+            <joint name="joint_left_wheel">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             </joint>     
-            <actuator name="${prefix}_joint_lw_motor">
+            <actuator name="joint_lw_motor">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 <mechanicalReduction>${wheel_mechanical_reduction}</mechanicalReduction>
             </actuator>
         </transmission>
 
         <!-- Link: right wheel link -->
-        <link name="${prefix}_right_wheel_link">
+        <link name="right_wheel_link">
             <xacro:Wheel_Inertia    m="${side_wheel_mass}" 
                                     ixx="${side_wheel_ixx}"  
                                     iyy="${side_wheel_iyy}" 
@@ -382,9 +382,9 @@
         </link>
 
         <!-- Joint: base link & right wheel link -->
-        <joint name="${prefix}_joint_right_wheel" type="continuous">
-            <parent link="${prefix}_base_link"/>
-            <child link="${prefix}_right_wheel_link"/>
+        <joint name="joint_right_wheel" type="continuous">
+            <parent link="base_link"/>
+            <child link="right_wheel_link"/>
             <origin xyz="0 -${side_wheel_offset_y} ${side_wheel_offset_z}" rpy="0 0 0" /> 
             <axis xyz="0 1 0" rpy="0 0 0" />
             <limit effort="${wheel_joint_effort_limit}" velocity="${wheel_joint_velocity_limit}"/>
@@ -392,12 +392,12 @@
         </joint>
 
         <!-- Transmission: right wheel -->
-        <transmission name="${prefix}_joint_rw_trans">
+        <transmission name="joint_rw_trans">
             <type>transmission_interface/SimpleTransmission</type>
-            <joint name="${prefix}_joint_right_wheel">
+            <joint name="joint_right_wheel">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             </joint>     
-            <actuator name="${prefix}_joint_rw_motor">
+            <actuator name="joint_rw_motor">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 <mechanicalReduction>${wheel_mechanical_reduction}</mechanicalReduction>
             </actuator>
@@ -407,8 +407,8 @@
 
     </xacro:macro>
 
-    <!-- Create DSR Body With Prefix Name -->
-    <xacro:DSR_BODY prefix="DSR"/>
+    <!-- Create DSR Body -->
+    <xacro:DSR_BODY/>
 
 
 </robot>

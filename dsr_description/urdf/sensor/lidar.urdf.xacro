@@ -3,19 +3,19 @@
   
 
     <!-- LIDAR SENSOR -->
-    <xacro:macro name="lidar" params ="prefix suffix x y z yaw"> 
-        <link name="${prefix}_laser_${suffix}"/>
+    <xacro:macro name="lidar" params ="suffix x y z yaw"> 
+        <link name="laser_${suffix}"/>
 
-        <joint name="${prefix}_joint_laser_${suffix}" type="fixed">
+        <joint name="joint_laser_${suffix}" type="fixed">
             <axis xyz="0 1 0" />
             <origin xyz="${x} ${y} ${z}" rpy="0 0 ${yaw}"/>
-            <parent link="${prefix}_base_link"/>
-            <child link="${prefix}_laser_${suffix}"/>
+            <parent link="base_link"/>
+            <child link="laser_${suffix}"/>
         </joint>
 
 
 
-        <gazebo reference="${prefix}_laser_${suffix}">
+        <gazebo reference="laser_${suffix}">
             <sensor type="ray" name="${suffix}_sick_sensor">
                 <pose>0 0 0 0 0 0</pose>
                 <visualize>false</visualize>
@@ -44,14 +44,14 @@
                 <plugin name="gazebo_ros_${suffix}_sick_controller" filename="libgazebo_ros_laser.so">
                     <robotNamespace>$(arg robotName)</robotNamespace>
                     <topicName>${suffix}/scan</topicName>
-                    <frameName>${prefix}_laser_${suffix}</frameName>
+                    <frameName>laser_${suffix}</frameName>
                 </plugin>
             </sensor>
         </gazebo>
 
     </xacro:macro>
     
-    <xacro:lidar prefix="DSR" suffix="front" x="0.772" y="0" z="0.14" yaw="0"/>
-    <xacro:lidar prefix="DSR" suffix="rear" x="-0.772" y="0" z="0.14" yaw="3.1416"/>
+    <xacro:lidar suffix="front" x="0.772" y="0" z="0.14" yaw="0"/>
+    <xacro:lidar suffix="rear" x="-0.772" y="0" z="0.14" yaw="3.1416"/>
 
 </robot>

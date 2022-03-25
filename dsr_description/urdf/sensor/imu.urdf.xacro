@@ -3,10 +3,10 @@
   
 
     <!-- IMU SENSOR -->
-    <xacro:macro name="imu" params ="prefix x y z"> 
+    <xacro:macro name="imu" params ="x y z"> 
 
 
-        <link name="${prefix}_imu_link">
+        <link name="imu_link">
             <inertial>
                 <mass value="0.001"/>
                 <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -28,18 +28,18 @@
             </collision>
         </link>
 
-        <joint name="${prefix}_imu_joint" type="fixed">
+        <joint name="imu_joint" type="fixed">
             <axis xyz="1 0 0"/> <!-- 0 1 0 -->
             <origin xyz="${x} ${y} ${z}"/>
-            <parent link="${prefix}_base_link"/>
-            <child link="${prefix}_imu_link"/>
+            <parent link="base_link"/>
+            <child link="imu_link"/>
         </joint>
 
         <gazebo>
             <plugin name="ros_imu" filename="libgazebo_ros_imu.so">
                 <robotNamespace>$(arg robotName)</robotNamespace>
                 <topicName>imu_data</topicName>
-                <bodyName>${prefix}_imu_link</bodyName>
+                <bodyName>imu_link</bodyName>
                 <serviceName>/imu_service</serviceName>
                 <gaussianNoise>0.005</gaussianNoise>		
             </plugin>
@@ -47,6 +47,6 @@
 
     </xacro:macro>
     
-    <xacro:imu prefix="DSR" x="0" y="0" z="0.2825"/>
+    <xacro:imu x="0" y="0" z="0.2825"/>
 
 </robot>

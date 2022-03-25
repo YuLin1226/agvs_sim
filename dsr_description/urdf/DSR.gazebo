@@ -9,25 +9,25 @@
         </plugin>
     </gazebo>
 
-    <xacro:macro name="gazebo_links_setting" params ="prefix"> 
+    <xacro:macro name="gazebo_links_setting"> 
         
-        <gazebo reference="${prefix}_base_footprint">
+        <gazebo reference="base_footprint">
             <material>Gazebo/Green</material>
         </gazebo>
 
-        <gazebo reference="${prefix}_base_link">
+        <gazebo reference="base_link">
             <material>Gazebo/Red</material>
         </gazebo>
 
-        <gazebo reference="${prefix}_front_wheel_link">
+        <gazebo reference="front_wheel_link">
             <material>Gazebo/Blue</material>
         </gazebo>
 
-        <gazebo reference="${prefix}_back_wheel_link">
+        <gazebo reference="back_wheel_link">
             <material>Gazebo/Blue</material>
         </gazebo>
 
-        <gazebo reference="${prefix}_right_wheel_link">
+        <gazebo reference="right_wheel_link">
             <mu1 value="2.0"/> 
             <mu2 value="1.0"/> 
             <fdir1 value="0 0 0"/>
@@ -36,7 +36,7 @@
             <material>Gazebo/Grey</material>
         </gazebo>
 
-        <gazebo reference="${prefix}_left_wheel_link">
+        <gazebo reference="left_wheel_link">
             <mu1 value="2.0"/> 
             <mu2 value="1.0"/> 
             <kp value="1000000000.0"/>
@@ -48,6 +48,6 @@
 
     </xacro:macro>
 
-    <xacro:gazebo_links_setting prefix="DSR"/>
+    <xacro:gazebo_links_setting/>
 
 </robot>
