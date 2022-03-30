@@ -33,6 +33,7 @@
         args="-urdf -model $(arg robot_name) -param robot_description -x -3 -z 0.35"/>
 
   <!-- ros_control agvs launch file -->
-  <include file="$(find dsr_control)/launch/dsr_control.launch" />
+  <!-- <include file="$(find dsr_control)/launch/dsr_control.launch" /> -->
+  <include file="$(find dsr_control)/launch/dws_controller.launch" />
 
 </launch>

@@ -1,0 +1,55 @@
+DSR: 
+    robot_joint_publisher:
+        type: "joint_state_controller/JointStateController"
+        publish_rate: 50
+        
+    dual_wheel_steering_controller: 
+        type: "dual_wheel_steering_controller/DualWheelSteeringController"
+
+        front_wheel     : ['joint_front_wheel']
+        rear_wheel      : ['joint_back_wheel']
+        front_steering  : ['joint_front_motor']
+        rear_steering   : ['joint_back_motor']
+        
+        pose_covariance_diagonal : [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0]
+        twist_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0]
+        
+        wheel_base      : 0.958
+        wheel_radius    : 0.10975
+        odom_h_variable : 1.04384134
+
+        publish_rate                    : 50.0              
+        velocity_rolling_window_size    : 10
+        cmd_vel_timeout                 : 0.25
+
+        base_frame_id   : base_footprint
+        
+        open_loop       : false
+        enable_odom_tf  : true
+
+        linear:
+            x:
+                has_velocity_limits    : true
+                max_velocity           : 1.0  # m/s
+                min_velocity           : -0.5 # m/s
+
+                has_acceleration_limits: true
+                max_acceleration       : 0.8  # m/s^2
+                min_acceleration       : -0.4 # m/s^2
+
+                has_jerk_limits        : true
+                max_jerk               : 5.0  # m/s^3
+                # min_jerk               : 5.0  # m/s^3
+        angular:
+            z:
+                has_velocity_limits    : true
+                max_velocity           : 1.7  # rad/s
+                # min_velocity           : 1.7  # rad/s
+
+                has_acceleration_limits: true
+                max_acceleration       : 1.5  # rad/s^2
+                # min_acceleration       : 1.5  # rad/s^2
+
+                has_jerk_limits        : true
+                max_jerk               : 2.5  # rad/s^3
+                # min_jerk               : 2.5  # rad/s^3

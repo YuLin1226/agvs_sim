@@ -182,7 +182,7 @@
 				<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 			</joint>
 			<actuator name="joint_bmw_motor">
-                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+                <hardwareInterface>PositionJointInterface</hardwareInterface>
 				<mechanicalReduction>${motor_wheel_mechanical_reduction}</mechanicalReduction>
 			</actuator>
 		</transmission>
@@ -227,7 +227,7 @@
                 <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>	 
             </joint>
             <actuator name="joint_bw_motor">
-                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>	    
+                <hardwareInterface>VelocityJointInterface</hardwareInterface>	    
                 <mechanicalReduction>${wheel_mechanical_reduction}</mechanicalReduction>
             </actuator>
         </transmission>
@@ -282,7 +282,7 @@
 				<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
 			</joint>
 			<actuator name="joint_fmw_motor">
-                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+                <hardwareInterface>PositionJointInterface</hardwareInterface>
 				<mechanicalReduction>${motor_wheel_mechanical_reduction}</mechanicalReduction>
 			</actuator>
 		</transmission>
@@ -328,7 +328,7 @@
                 <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>	 
             </joint>
             <actuator name="joint_fw_motor">
-                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>	    
+                <hardwareInterface>VelocityJointInterface</hardwareInterface>	    
                 <mechanicalReduction>${wheel_mechanical_reduction}</mechanicalReduction>
             </actuator>
         </transmission>

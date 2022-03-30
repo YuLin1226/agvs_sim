@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="robotName" default="DSR"/>
+
+    <!-- Load joint controller configurations from YAcd .ML file to parameter server -->
+    <rosparam file="$(find dsr_control)/config/dws_controller.yaml" command="load" subst_value="True"/>
+
+    <!-- Spawn controller -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+        ns="$(arg robotName)"
+        args="dual_wheel_steering_controller robot_joint_publisher --shutdown-timeout 5" />
+
+    <!-- Gazebo pub joint_state, and robot_state_publisher converts it into TF data for rviz. -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" 
+        respawn="false" output="screen">
+        <remap from="/joint_states" to="/DSR/joint_states" />
+    </node>
+    
+</launch>
+
