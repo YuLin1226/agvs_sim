@@ -15,6 +15,10 @@
         respawn="false" output="screen">
         <remap from="/joint_states" to="/DSR/joint_states" />
     </node>
+
+    <node pkg="agvs_robot_control" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard">
+        <remap from="/cmd_vel" to="/DSR/dual_wheel_steering_controller/cmd_vel" />
+    </node>
     
 </launch>
 
