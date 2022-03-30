@@ -1,5 +1,5 @@
 DSR:
-
+  # 若使用此yaml檔案，則需要將 DSR_body.urdf.xacro 的轉向 transmission 作更改，須改回 EffortJointInterface。
   joint_back_wheel_controller:
     type: velocity_controllers/JointVelocityController
     joint: joint_back_wheel

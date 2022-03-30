@@ -165,7 +165,7 @@
         </joint>
 
         <!-- Transmission: back motor -->
-        <transmission name="joint_bmw_trans">
+        <!-- <transmission name="joint_bmw_trans">
             <type>transmission_interface/SimpleTransmission</type>
             <joint name="joint_back_motor">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>	 
@@ -174,7 +174,18 @@
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>	    
                 <mechanicalReduction>${motor_wheel_mechanical_reduction}</mechanicalReduction>
             </actuator>
-        </transmission>
+        </transmission> -->
+
+        <transmission name="joint_bmw_trans">
+			<type>transmission_interface/SimpleTransmission</type>
+			<joint name="joint_back_motor">
+				<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+			</joint>
+			<actuator name="joint_bmw_motor">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+				<mechanicalReduction>${motor_wheel_mechanical_reduction}</mechanicalReduction>
+			</actuator>
+		</transmission>
 
         <!-- Link: back wheel link -->
         <link name="back_wheel_link">
@@ -255,7 +266,7 @@
         </joint>
 
         <!-- Transmission: front motor -->
-        <transmission name="joint_fmw_trans">
+        <!-- <transmission name="joint_fmw_trans">
             <type>transmission_interface/SimpleTransmission</type>
             <joint name="joint_front_motor">
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>	 
@@ -264,7 +275,18 @@
                 <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>	    
                 <mechanicalReduction>${motor_wheel_mechanical_reduction}</mechanicalReduction>
             </actuator>
-        </transmission>
+        </transmission> -->
+        <transmission name="joint_fmw_trans">
+			<type>transmission_interface/SimpleTransmission</type>
+			<joint name="joint_front_motor">
+				<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+			</joint>
+			<actuator name="joint_fmw_motor">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+				<mechanicalReduction>${motor_wheel_mechanical_reduction}</mechanicalReduction>
+			</actuator>
+		</transmission>
+
 
         <!-- Link: front wheel link -->
         <link name="front_wheel_link">
