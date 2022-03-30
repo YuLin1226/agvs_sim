@@ -20,6 +20,7 @@ DSR:
     joint: joint_front_motor
     pid: {p: 100.0, i: 0.01, d: 10.0}
   
+  # 這個控制器負責發布joint_states的資料。
   joint_read_state_controller:
     type: joint_state_controller/JointStateController 
     publish_rate: 100.0
