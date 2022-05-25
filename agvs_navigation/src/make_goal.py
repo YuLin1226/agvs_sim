@@ -3,6 +3,7 @@ import rospy
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal, MoveBaseFeedback, MoveBaseResult
 from tf.transformations import quaternion_from_euler, euler_from_quaternion
 from geometry_msgs.msg import PoseWithCovarianceStamped
+import math
 
 class MakeNavGoal:
     def __init__(self) -> None:
@@ -32,9 +33,9 @@ class MakeNavGoal:
 
         if self.flag_:
         
-            goalX = self.carPosX_ + 1.0
-            goalY = self.carPosY_
             goalYaw = self.carPosYaw_
+            goalX = self.carPosX_ + math.cos(goalYaw)
+            goalY = self.carPosY_ + math.sin(goalYaw)
             rospy.loginfo("Send Navigation Goal to (%f, %f, %f)" %(goalX, goalY, goalYaw))
 
             goal = MoveBaseGoal()
